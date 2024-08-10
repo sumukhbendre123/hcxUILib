@@ -1,17 +1,21 @@
-import React from 'react';
-import Logo from '../images/swasth_logo.png';
-import animationImage from '../images/banner.svg';
-import AuthForm from '../components/Auth/AuthForm';
-import { login } from '../services/authService';
+import React from "react";
+import Logo from "../images/swasth_logo.png";
+import animationImage from "../images/banner.svg";
+import AuthForm from "../components/Auth/AuthForm";
+import { login } from "../services/authService";
+import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const handleLogin = async (credentials: { username: string; password: string }) => {
+  const handleLogin = async (credentials: {
+    username: string;
+    password: string;
+  }) => {
     await login(credentials);
   };
 
   return (
-    <div className="rounded-sm h-screen border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      <AuthForm 
+    <div className="rounded-sm h-screen border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark flex">
+      <AuthForm
         title="Sign In"
         submitButtonLabel="Sign In"
         onSubmit={handleLogin}

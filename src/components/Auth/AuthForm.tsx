@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import LoadingButton from '../LoadingButton';
-import AuthInput from './AuthInput';
-import PasswordInput from './PasswordInput';
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
+import LoadingButton from "../LoadingButton";
+import AuthInput from "./AuthInput";
+import PasswordInput from "./PasswordInput";
 
 interface AuthFormProps {
   title: string;
   submitButtonLabel: string;
-  onSubmit: (credentials: { username: string; password: string }) => Promise<void>;
+  onSubmit: (credentials: {
+    username: string;
+    password: string;
+  }) => Promise<void>;
   logo: string;
   banner: string;
   altText: string;
   isOTP?: boolean;
   otpSubmit?: (mobileNumber: string) => Promise<void>;
+  participantCode?: string;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
@@ -24,80 +28,95 @@ const AuthForm: React.FC<AuthFormProps> = ({
   banner,
   altText,
   isOTP = false,
-  otpSubmit
+  otpSubmit,
+  participantCode,
 }) => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState<string>("");
+  const [username, setUsername] = useState<string>(participantCode || "");
   const [password, setPassword] = useState<string>("");
   const [mobileNumber, setMobileNumber] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidMobile, setIsValidMobile] = useState(true);
+  const [isValidParticipantCode, setIsValidParticipantCode] = useState(true);
+  const navigate = useNavigate();
+
+  const validateEmail = (email: string) =>
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  const validateMobile = (mobile: string) => /^\d{10}$/.test(mobile);
+  const validateParticipantCode = (code: string) =>
+    /^hosp_demoop_\d{8}@swasth-hcx-dev$/.test(code);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       if (isOTP && otpSubmit) {
-        await otpSubmit(mobileNumber);
+        if (validateMobile(mobileNumber)) {
+          await otpSubmit(mobileNumber);
+        } else {
+          toast.error("Invalid mobile number format!");
+          setIsValidMobile(false);
+        }
       } else {
-        await onSubmit({ username, password });
+        if (validateParticipantCode(username) && password) {
+          await onSubmit({ username, password });
+          toast.success("Operation successful!");
+          navigate("/home");
+        } else {
+          toast.error("Invalid participant code or missing password!");
+          if (!validateParticipantCode(username))
+            setIsValidParticipantCode(false);
+        }
       }
-      toast.success("Operation successful!");
-      navigate("/home");
     } catch (error) {
       toast.error("Please check the input details!");
-      setLoading(false);
     }
+    setLoading(false);
   };
 
-  const handleMobileNumberChange = (e: any) => {
+  const handleMobileNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    const isValidInput = /^\d{10}$/.test(inputValue);
-    setIsValid(isValidInput);
+    setIsValidMobile(validateMobile(inputValue));
     setMobileNumber(inputValue);
   };
 
   return (
-    <div className="flex flex-wrap items-center">
-      <div className="hidden w-full xl:block xl:w-1/2">
-        <div className="py-17.5 px-26 text-center">
-          <a className="mb-5.5 inline-block" href="#">
-            <img className="hidden dark:block w-48" src={logo} alt={altText} />
-            <img className="dark:hidden w-48" src={logo} alt={altText} />
-          </a>
-
-          <p className="2xl:px-20 font-bold text-xl text-black">
-            HCX Provider App
-          </p>
-
-          <span className="mt-15 inline-block">
-            <img className="block" src={banner} alt="Banner" />
-          </span>
-        </div>
+    <div className="flex h-screen w-full">
+      <div className="flex flex-col items-center justify-center w-1/2 bg-gray-100 p-8">
+        <a className="mb-5.5" href="#">
+          <img className="w-48" src={logo} alt={altText} />
+        </a>
+        <p className="font-bold text-xl text-black">HCX Provider App</p>
+        <img className="mt-5 block" src={banner} alt="Banner" />
       </div>
-      <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-        <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-          <div className="text-center w-full xl:hidden">
-            <a className="mb-5.5 inline-block" href="#">
-              <img className="hidden dark:block w-48" src={logo} alt={altText} />
-              <img className="dark:hidden w-48" src={logo} alt={altText} />
-            </a>
-          </div>
-          <h2 className="mb-9 text-2xl font-bold text-black sm:text-title-xl2">
+      <div className="flex flex-col items-center justify-center w-1/2 p-8">
+        <div className="w-full max-w-md">
+          <h2 className="mb-9 text-2xl font-bold text-black text-center">
             {title}
           </h2>
           <form onSubmit={handleSubmit}>
             {!isOTP ? (
               <>
-                <AuthInput 
-                  label="Participant Code" 
-                  value={username} 
-                  onChange={(e) => setUsername(e.target.value)} 
+                <AuthInput
+                  label="Participant Code"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setIsValidParticipantCode(
+                      validateParticipantCode(e.target.value)
+                    );
+                  }}
+                  placeholder="Enter your participant code"
                 />
-                <PasswordInput 
-                  label="Password" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
+                {!isValidParticipantCode && (
+                  <p className="text-red-500">
+                    Invalid participant code format!
+                  </p>
+                )}
+                <PasswordInput
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </>
             ) : (
@@ -109,26 +128,16 @@ const AuthForm: React.FC<AuthFormProps> = ({
                   <input
                     type="text"
                     placeholder="Enter your registered mobile number"
-                    className={`w-full rounded-lg border ${isValid ? 'border-stroke' : 'border-red'} bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+                    className={`w-full rounded-lg border ${
+                      isValidMobile ? "border-stroke" : "border-red"
+                    } bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
                     onChange={handleMobileNumberChange}
                   />
-                  <span className="absolute right-4 top-4">
-                    <svg
-                      className="fill-current"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g opacity="0.5">
-                        <path
-                          d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
-                          fill=""
-                        />
-                      </g>
-                    </svg>
-                  </span>
+                  {!isValidMobile && (
+                    <p className="text-red-500">
+                      Invalid mobile number format!
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -136,8 +145,12 @@ const AuthForm: React.FC<AuthFormProps> = ({
               {!loading ? (
                 <button
                   type="submit"
-                  className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 transition hover:bg-opacity-90"
-                  disabled={!isOTP && (username === "" || password === "")}
+                  className="w-full cursor-pointer rounded-lg bg-blue-700 text-white p-4 transition hover:bg-blue-600"
+                  disabled={
+                    !(isOTP
+                      ? isValidMobile
+                      : isValidParticipantCode && password)
+                  }
                 >
                   {submitButtonLabel}
                 </button>
@@ -146,6 +159,20 @@ const AuthForm: React.FC<AuthFormProps> = ({
               )}
             </div>
           </form>
+          <div className="flex flex-col items-center">
+            <Link
+              to="/reset-password"
+              className="text-blue-700 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+            <div className="mt-1">
+              Don’t have an account?{" "}
+              <Link to="/signup" className="text-blue-700 hover:underline">
+                Sign Up
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

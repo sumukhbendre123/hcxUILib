@@ -1,6 +1,8 @@
+// services/authServices.ts
+
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_HCX_SERVICE_URL;
+const BASE_URL = "https://dev-hcx.swasth.app/api/v0.8";
 
 const makeRequest = (endpoint: string, payload: any, config?: any) => {
   return axios.post(`${BASE_URL}${endpoint}`, payload, config);
