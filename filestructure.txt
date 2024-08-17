@@ -1,0 +1,59 @@
+|-- .env
+|-- .eslintrc.cjs
+|-- .gitignore
+|-- index.html
+|-- package-lock.json
+|-- package.json
+|-- postcss.config.js
+|-- public
+    |-- vite.svg
+|-- README.md
+|-- src
+    |-- App.css
+    |-- App.tsx
+    |-- assets
+        |-- react.svg
+    |-- components
+        |-- Auth
+            |-- AuthForm.tsx
+            |-- AuthInput.tsx
+            |-- PasswordInput.tsx
+        |-- CursorConnect.tsx
+        |-- ForgotPassword
+            |-- ForgotPassword.tsx
+            |-- ResetPassword.tsx
+        |-- LoadingButton.tsx
+        |-- TransparentLoader.tsx
+    |-- images
+        |-- banner.svg
+        |-- googleQRcodes.png
+        |-- Group 49576.png
+        |-- image.png
+        |-- noun-image-1821940.png
+        |-- pngwing.com.png
+        |-- success.png
+        |-- swasth_logo.png
+        |-- Verified-512.png
+    |-- index.css
+    |-- jest.config.js
+    |-- main.tsx
+    |-- pages
+        |-- Email.tsx
+        |-- Login.test.tsx
+        |-- Login.tsx
+        |-- OTP.tsx
+        |-- ParticipantCode.tsx
+        |-- Signup.tsx
+        |-- SomePage.tsx
+        |-- VerifyOTP.tsx
+    |-- services
+        |-- authService.ts
+    |-- setupTests.ts
+    |-- utils
+        |-- maskMobileNumber.ts
+    |-- vite-env.d.ts
+|-- tailwind.config.js
+|-- tsconfig.app.json
+|-- tsconfig.json
+|-- tsconfig.node.json
+|-- vite.config.ts

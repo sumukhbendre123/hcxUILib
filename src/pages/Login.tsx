@@ -3,7 +3,6 @@ import Logo from "../images/swasth_logo.png";
 import animationImage from "../images/banner.svg";
 import AuthForm from "../components/Auth/AuthForm";
 import { login } from "../services/authService";
-import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
   const handleLogin = async (credentials: {
@@ -11,6 +10,10 @@ const Login: React.FC = () => {
     password: string;
   }) => {
     await login(credentials);
+  };
+  const handleHoverChange = (elementId: string | null) => {
+    console.log("Hovered element:", elementId);
+    // Handle feedback logic here, such as showing tooltips or other UI updates
   };
 
   return (

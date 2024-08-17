@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoadingButton from "../LoadingButton";
 import AuthInput from "./AuthInput";
 import PasswordInput from "./PasswordInput";
+// import CursorConnect from "../CursorConnect";
 
 interface AuthFormProps {
   title: string;
@@ -58,15 +59,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
           setIsValidMobile(false);
         }
       } else {
-        if (validateParticipantCode(username) && password) {
-          await onSubmit({ username, password });
-          toast.success("Operation successful!");
-          navigate("/home");
-        } else {
-          toast.error("Invalid participant code or missing password!");
-          if (!validateParticipantCode(username))
-            setIsValidParticipantCode(false);
-        }
+        await onSubmit({ username, password });
+        toast.success("Operation successful!");
+        navigate("/home");
       }
     } catch (error) {
       toast.error("Please check the input details!");
@@ -108,11 +103,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
                   }}
                   placeholder="Enter your participant code"
                 />
-                {!isValidParticipantCode && (
-                  <p className="text-red-500">
-                    Invalid participant code format!
-                  </p>
-                )}
                 <PasswordInput
                   label="Password"
                   value={password}
@@ -143,6 +133,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             )}
             <div className="mb-5">
               {!loading ? (
+                // <CursorConnect description="Form Submission">
                 <button
                   type="submit"
                   className="w-full cursor-pointer rounded-lg bg-blue-700 text-white p-4 transition hover:bg-blue-600"
@@ -155,6 +146,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                   {submitButtonLabel}
                 </button>
               ) : (
+                // </CursorConnect>
                 <LoadingButton />
               )}
             </div>
