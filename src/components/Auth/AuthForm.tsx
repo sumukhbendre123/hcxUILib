@@ -58,15 +58,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
           setIsValidMobile(false);
         }
       } else {
-        if (validateParticipantCode(username) && password) {
-          await onSubmit({ username, password });
-          toast.success("Operation successful!");
-          navigate("/home");
-        } else {
-          toast.error("Invalid participant code or missing password!");
-          if (!validateParticipantCode(username))
-            setIsValidParticipantCode(false);
-        }
+        await onSubmit({ username, password });
+        toast.success("Operation successful!");
+        navigate("/home");
       }
     } catch (error) {
       toast.error("Please check the input details!");
@@ -108,11 +102,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
                   }}
                   placeholder="Enter your participant code"
                 />
-                {!isValidParticipantCode && (
-                  <p className="text-red-500">
-                    Invalid participant code format!
-                  </p>
-                )}
                 <PasswordInput
                   label="Password"
                   value={password}
