@@ -23,6 +23,8 @@
             |-- ForgotPassword.tsx
             |-- ResetPassword.tsx
         |-- LoadingButton.tsx
+        |-- SupportingDocument
+            |-- SupportingDocument.tsx
         |-- TransparentLoader.tsx
     |-- images
         |-- banner.svg
@@ -39,7 +41,6 @@
     |-- main.tsx
     |-- pages
         |-- Email.tsx
-        |-- Login.test.tsx
         |-- Login.tsx
         |-- OTP.tsx
         |-- ParticipantCode.tsx
@@ -50,7 +51,9 @@
         |-- authService.ts
     |-- setupTests.ts
     |-- utils
+        |-- attachmentSizeValidation.ts
         |-- maskMobileNumber.ts
+        |-- strings.ts
     |-- vite-env.d.ts
 |-- tailwind.config.js
 |-- tsconfig.app.json
