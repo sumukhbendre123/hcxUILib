@@ -23,6 +23,8 @@
             |-- ForgotPassword.tsx
             |-- ResetPassword.tsx
         |-- LoadingButton.tsx
+        |-- QrCodeScanner
+            |-- QrCodeScanner.tsx
         |-- ReferenceDropdown.tsx
         |-- SupportingDocument
             |-- SupportingDocument.tsx
