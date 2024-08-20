@@ -8,6 +8,49 @@ import "react-toastify/dist/ReactToastify.css";
 import QrCodeScanner from "./components/QrCodeScanner/QrCodeScanner";
 import CursorConnect from "./components/CursorConnect/CursorConnect";
 import SupportingDocuments from "./components/SupportingDocument/SupportingDocument";
+import NotificationSection from "./components/Notifications/NotificationSection";
+import { NotificationProps } from "./components/Notifications/Notification.types";
+
+const sampleNotifications: NotificationProps[] = [
+  {
+    id: 1,
+    header: "New Feature Available",
+    text: "We've added a new feature to improve your experience. Check it out now!",
+    sender_code: "System",
+    date: "12 May, 2024",
+    onClick: () => alert("Notification 1 clicked"),
+  },
+  {
+    id: 2,
+    header: "Maintenance Alert",
+    text: "Scheduled maintenance will occur on 2024-08-21 from 12:00 AM to 2:00 AM.",
+    sender_code: "Admin",
+    date: "2 Feb, 2024",
+    onClick: () => alert("Notification 2 clicked"),
+  },
+  {
+    id: 3,
+    header: "Welcome to the App!",
+    text: "Thank you for joining us. We hope you enjoy the experience.",
+    sender_code: "Support",
+    date: "22 Jan, 2024",
+    onClick: () => alert("Notification 3 clicked"),
+  },
+];
+
+// Wrapper component to pass props
+const NotificationSectionWrapper: React.FC = () => {
+  return (
+    <NotificationSection
+      notifications={sampleNotifications}
+      loading={false}
+      onNotificationClick={(id: number) =>
+        console.log(`Notification ${id} clicked`)
+      }
+      activeNotificationId={null}
+    />
+  );
+};
 
 const App: React.FC = () => {
   const [qrCodeData, setQrCodeData] = useState<any>();
@@ -39,6 +82,7 @@ const App: React.FC = () => {
             />
           }
         />
+        <Route path="/noti" element={<NotificationSectionWrapper />} />
         <Route
           path="/cc"
           element={

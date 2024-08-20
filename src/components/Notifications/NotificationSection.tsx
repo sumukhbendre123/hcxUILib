@@ -1,27 +1,30 @@
-import React, { useState } from "react";
+// NotificationSection.tsx
+import React from "react";
 import NotificationList from "./NotificationList";
 import { NotificationProps } from "./Notification.types";
 
-const NotificationSection: React.FC = () => {
-  const [notifications, setNotifications] = useState<NotificationProps[]>([]);
-  const [activeNotificationId, setActiveNotificationId] = useState<
-    number | null
-  >(null);
-  const [loading, setLoading] = useState<boolean>(false);
+interface NotificationSectionProps {
+  notifications: NotificationProps[];
+  loading: boolean;
+  onNotificationClick: (id: number) => void;
+  activeNotificationId: number | null;
+}
 
-  // Fetch notifications here
-
-  const handleNotificationClick = (id: number) => {
-    setActiveNotificationId(id === activeNotificationId ? null : id);
-  };
-
+const NotificationSection: React.FC<NotificationSectionProps> = ({
+  notifications,
+  loading,
+  onNotificationClick,
+  activeNotificationId,
+}) => {
   return (
-    <NotificationList
-      notifications={notifications}
-      loading={loading}
-      onNotificationClick={handleNotificationClick}
-      activeNotificationId={activeNotificationId}
-    />
+    <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
+      <NotificationList
+        notifications={notifications}
+        loading={loading}
+        onNotificationClick={onNotificationClick}
+        activeNotificationId={activeNotificationId}
+      />
+    </div>
   );
 };
 
