@@ -18,14 +18,21 @@
             |-- AuthForm.tsx
             |-- AuthInput.tsx
             |-- PasswordInput.tsx
-        |-- CursorConnect.tsx
+        |-- CursorConnect
+            |-- CursorConnect.tsx
         |-- ForgotPassword
             |-- ForgotPassword.tsx
             |-- ResetPassword.tsx
         |-- LoadingButton.tsx
+        |-- Notifications
+            |-- Notification.tsx
+            |-- Notification.types.ts
+            |-- NotificationList.tsx
+            |-- NotificationSection.tsx
         |-- QrCodeScanner
             |-- QrCodeScanner.tsx
-        |-- ReferenceDropdown.tsx
+        |-- ReferenceDropdown
+            |-- ReferenceDropdown.tsx
         |-- SupportingDocument
             |-- SupportingDocument.tsx
         |-- TransparentLoader.tsx
@@ -41,6 +48,7 @@
         |-- Verified-512.png
     |-- index.css
     |-- jest.config.js
+    |-- lodash.d.ts
     |-- main.tsx
     |-- pages
         |-- Email.tsx

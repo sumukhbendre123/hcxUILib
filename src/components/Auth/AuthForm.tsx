@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoadingButton from "../LoadingButton";
 import AuthInput from "./AuthInput";
 import PasswordInput from "./PasswordInput";
-// import CursorConnect from "../CursorConnect";
+// import CursorConnect from "../CursorConnect/CursorConnect";
 
 interface AuthFormProps {
   title: string;

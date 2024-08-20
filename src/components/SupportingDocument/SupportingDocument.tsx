@@ -1,6 +1,7 @@
 import { handleFileChange } from "../../utils/attachmentSizeValidation";
 import strings from "../../utils/strings";
 import _ from "lodash";
+import { useState } from "react";
 
 interface SupportingDocumentsProps {
   setDocumentType: (value: string) => void;
@@ -23,25 +24,36 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
   fileErrorMessage,
   selectedFile,
 }) => {
+  const [documentType, updateDocumentType] = useState("");
+
   const handleDelete = (name: string) => {
     const updatedFilesList = selectedFile.filter((file) => file.name !== name);
     setSelectedFile(updatedFilesList);
   };
 
+  const handleDocumentTypeChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedType = e.target.value;
+    setDocumentType(selectedType);
+    updateDocumentType(selectedType); // Update the state with the selected type
+  };
+
   return (
     <div className="mt-4 rounded-lg border border-stroke bg-white p-2 px-3 shadow-default dark:border-strokedark dark:bg-boxdark">
-      <h2 className="text-1xl mb-4 font-bold text-black dark:text-white sm:text-title-xl2">
+      <h2 className="text-1xl mb-4 font-bold text-black dark:text-black sm:text-title-xl2">
         {strings.SUPPORTING_DOCS}
       </h2>
-      <label className="mb-2.5 block text-left font-medium text-black dark:text-white">
+      <label className="mb-2.5 block text-left font-medium text-black dark:text-black">
         {strings.DOC_TYPE}
       </label>
       <div className="relative z-20 mb-4 bg-white dark:bg-form-input">
         <select
-          onChange={(e) => setDocumentType(e.target.value)}
+          onChange={handleDocumentTypeChange}
           required
           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-4 px-6 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark"
         >
+          <option value="None">None</option>
           <option value="Bill/invoice">Medical Bill/invoice</option>
           <option value="Payment Receipt">Payment Receipt</option>
           <option value="Prescription">Prescription</option>
@@ -69,28 +81,9 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
         <div>
           <label
             htmlFor="profile"
-            className="flex h-15 w-15 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90"
+            className="cursor-pointer text-primary underline hover:text-primary-dark"
           >
-            <svg
-              className="fill-current"
-              width="20"
-              height="20"
-              viewBox="0 0 14 14"
-              fill="none"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M4.76464 1.42638C4.87283 1.2641 5.05496 1.16663 5.25 1.16663H8.75C8.94504 1.16663 9.12717 1.2641 9.23536 1.42638L10.2289 2.91663H12.25C12.7141 2.91663 13.1592 3.101 13.4874 3.42919C13.8156 3.75738 14 4.2025 14 4.66663V11.0833C14 11.5474 13.8156 11.9925 13.4874 12.3207C13.1592 12.6489 12.7141 12.8333 12.25 12.8333H1.75C1.28587 12.8333 0.840752 12.6489 0.512563 12.3207C0.184375 11.9925 0 11.5474 0 11.0833V4.66663C0 4.2025 0.184374 3.75738 0.512563 3.42919C0.840752 3.101 1.28587 2.91663 1.75 2.91663H3.77114L4.76464 1.42638ZM5.56219 2.33329L4.5687 3.82353C4.46051 3.98582 4.27837 4.08329 4.08333 4.08329H1.75C1.59529 4.08329 1.44692 4.14475 1.33752 4.25415C1.22812 4.36354 1.16667 4.51192 1.16667 4.66663V11.0833C1.16667 11.238 1.22812 11.3864 1.33752 11.4958C1.44692 11.6052 1.59529 11.6666 1.75 11.6666H12.25C12.4047 11.6666 12.5531 11.6052 12.6625 11.4958C12.7719 11.3864 12.8333 11.238 12.8333 11.0833V4.66663C12.8333 4.51192 12.7719 4.36354 12.6625 4.25415C12.5531 4.14475 12.4047 4.08329 12.25 4.08329H9.91667C9.72163 4.08329 9.53949 3.98582 9.4313 3.82353L8.43781 2.33329H5.56219Z"
-                fill=""
-              />
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.00004 5.83329C6.03354 5.83329 5.25004 6.61679 5.25004 7.58329C5.25004 8.54979 6.03354 9.33329 7.00004 9.33329C7.96654 9.33329 8.75004 8.54979 8.75004 7.58329C8.75004 6.61679 7.96654 5.83329 7.00004 5.83329ZM4.08337 7.58329C4.08337 5.97246 5.38921 4.66663 7.00004 4.66663C8.61087 4.66663 9.91671 5.97246 9.91671 7.58329C9.91671 9.19413 8.61087 10.5 7.00004 10.5C5.38921 10.5 4.08337 9.19413 4.08337 7.58329Z"
-                fill=""
-              />
-            </svg>
+            Select documents
           </label>
           <input
             id="profile"
@@ -99,7 +92,6 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
             onChange={(e) =>
               handleFileChange(
                 e,
-                selectedFile,
                 setFileErrorMessage,
                 setIsSuccess,
                 setSelectedFile
@@ -109,11 +101,6 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
           />
         </div>
         <div>
-          {isSuccess && (
-            <p className="bg-green-300 text-success">
-              {strings.UPLOAD_SUCCESS}
-            </p>
-          )}
           {fileErrorMessage && (
             <p className="bg-red-500 text-black">{fileErrorMessage}</p>
           )}
@@ -121,19 +108,34 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
       </div>
       <div>
         {selectedFile.length > 0 && (
-          <div>
-            <p>Uploaded Documents:</p>
-            {selectedFile.map((file) => (
-              <div key={file.name}>
-                <span>{file.name}</span>
-                <button
-                  onClick={() => handleDelete(file.name)}
-                  className="text-red-600"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold mb-2">Uploaded Documents:</h3>
+            <table className="w-full text-left">
+              <thead>
+                <tr>
+                  <th className="py-2">Document Type</th>
+                  <th className="py-2">Document Name</th>
+                  <th className="py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedFile.map((file, index) => (
+                  <tr key={index}>
+                    <td className="py-2">{documentType}</td>{" "}
+                    {/* Display the selected document type */}
+                    <td className="py-2">{file.name}</td>
+                    <td className="py-2">
+                      <button
+                        onClick={() => handleDelete(file.name)}
+                        className="text-red-600 underline"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

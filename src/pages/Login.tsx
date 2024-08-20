@@ -3,7 +3,7 @@ import Logo from "../images/swasth_logo.png";
 import animationImage from "../images/banner.svg";
 import AuthForm from "../components/Auth/AuthForm";
 import { login } from "../services/authService";
-import ReferenceDropdown from "../components/ReferenceDropdown"; // Import the new dropdown component
+import ReferenceDropdown from "../components/ReferenceDropdown/ReferenceDropdown"; // Import the new dropdown component
 
 const Login: React.FC = () => {
   const handleLogin = async (credentials: {

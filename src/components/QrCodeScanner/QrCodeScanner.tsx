@@ -32,54 +32,75 @@ const QrCodeScanner: React.FC<QrCodeScannerProps> = ({
   scanMessage = strings.SCAN_QRCODE,
 }) => {
   const [isScanning, setIsScanning] = useState(false);
-  const [html5QrcodeScanner, setHtml5QrcodeScanner] =
-    useState<Html5QrcodeScanner | null>(null);
+  let html5QrcodeScanner: Html5QrcodeScanner | undefined;
   const qrcodeRegionId = "html5qr-code-full-region";
 
   const startScanner = () => {
+    if (html5QrcodeScanner) {
+      html5QrcodeScanner.clear().catch((error) => {
+        console.error("Failed to clear html5QrcodeScanner. ", error);
+      });
+    }
+
     const config: any = {};
     if (fps) config.fps = fps;
     if (qrbox) config.qrbox = qrbox;
     if (aspectRatio) config.aspectRatio = aspectRatio;
     if (disableFlip !== undefined) config.disableFlip = disableFlip;
 
-    const scanner = new Html5QrcodeScanner(
+    html5QrcodeScanner = new Html5QrcodeScanner(
       qrcodeRegionId,
       config,
       verbose || false
     );
-    scanner.render(qrCodeSuccessCallback, qrCodeErrorCallback);
-    setHtml5QrcodeScanner(scanner);
+    html5QrcodeScanner.render(qrCodeSuccessCallback, qrCodeErrorCallback);
+
     setIsScanning(true);
-    onStartScanner && onStartScanner();
+
+    if (onStartScanner) {
+      onStartScanner();
+    }
   };
 
   const stopScanner = () => {
-    html5QrcodeScanner
-      ?.clear()
-      .then(() => {
-        setIsScanning(false);
-        setHtml5QrcodeScanner(null);
-        onStopScanner && onStopScanner();
-      })
-      .catch(console.error);
+    if (html5QrcodeScanner) {
+      html5QrcodeScanner.clear().catch((error) => {
+        console.error("Failed to clear html5QrcodeScanner. ", error);
+      });
+
+      // Remove the HTML elements used by the scanner
+      const qrcodeRegion = document.getElementById(qrcodeRegionId);
+      if (qrcodeRegion) {
+        qrcodeRegion.innerHTML = "";
+      }
+
+      setIsScanning(false);
+
+      if (onStopScanner) {
+        onStopScanner();
+      }
+    }
   };
 
-  useEffect(() => stopScanner, [qrCodeSuccessCallback, qrCodeErrorCallback]);
+  useEffect(() => {
+    return () => {
+      stopScanner();
+    };
+  }, [qrCodeSuccessCallback, qrCodeErrorCallback]);
 
   return (
     <>
       <div className="text-center pb-2">{scanMessage}</div>
       {!isScanning && (
         <div className="m-auto bg-primary p-3 text-center w-30 rounded">
-          <button onClick={startScanner} className="text-white">
+          <button onClick={startScanner} className="text-black">
             {startButtonLabel}
           </button>
         </div>
       )}
       {isScanning && (
         <div className="m-auto bg-danger p-3 text-center w-30 rounded">
-          <button onClick={stopScanner} className="text-white">
+          <button onClick={stopScanner} className="text-black">
             {stopButtonLabel}
           </button>
         </div>
