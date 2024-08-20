@@ -3,7 +3,8 @@ import Logo from "../images/swasth_logo.png";
 import animationImage from "../images/banner.svg";
 import AuthForm from "../components/Auth/AuthForm";
 import { login } from "../services/authService";
-import ReferenceDropdown from "../components/ReferenceDropdown/ReferenceDropdown"; // Import the new dropdown component
+import ReferenceDropdown from "../components/ReferenceDropdown/ReferenceDropdown";
+import BackButton from "../components/BackButton/BackButton";
 
 const Login: React.FC = () => {
   const handleLogin = async (credentials: {
@@ -11,10 +12,6 @@ const Login: React.FC = () => {
     password: string;
   }) => {
     await login(credentials);
-  };
-  const handleHoverChange = (elementId: string | null) => {
-    console.log("Hovered element:", elementId);
-    // Handle feedback logic here, such as showing tooltips or other UI updates
   };
 
   const appLabels = [
@@ -33,7 +30,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="rounded-sm h-screen border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark flex flex-col items-center justify-center p-4">
+    <div className="relative h-screen flex flex-col items-center justify-center p-4 bg-white border border-stroke shadow-default dark:bg-boxdark dark:border-strokedark">
+      <BackButton className="absolute top-4 left-4" />{" "}
+      {/* Apply Tailwind CSS classes */}
       <ReferenceDropdown
         options={appLabels}
         onNavigate={handleDropdownNavigation}
