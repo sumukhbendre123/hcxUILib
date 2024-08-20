@@ -22,6 +22,7 @@
             |-- BackButton.tsx
         |-- CursorConnect
             |-- CursorConnect.tsx
+        |-- CustomButton.tsx
         |-- ForgotPassword
             |-- ForgotPassword.tsx
             |-- ResetPassword.tsx
@@ -35,6 +36,8 @@
             |-- QrCodeScanner.tsx
         |-- ReferenceDropdown
             |-- ReferenceDropdown.tsx
+        |-- SearchPatientBar
+            |-- SearchPatientBar.tsx
         |-- SupportingDocument
             |-- SupportingDocument.tsx
         |-- TransparentLoader.tsx
@@ -57,6 +60,7 @@
         |-- Login.tsx
         |-- OTP.tsx
         |-- ParticipantCode.tsx
+        |-- SearchPatient.tsx
         |-- Signup.tsx
         |-- SomePage.tsx
         |-- VerifyOTP.tsx

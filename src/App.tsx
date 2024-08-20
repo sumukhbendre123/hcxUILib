@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import OTP from "./pages/OTP";
 import ResetPassword from "./components/ForgotPassword/ResetPassword";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import QrCodeScanner from "./components/QrCodeScanner/QrCodeScanner";
 import CursorConnect from "./components/CursorConnect/CursorConnect";
 import SupportingDocuments from "./components/SupportingDocument/SupportingDocument";
 import NotificationSection from "./components/Notifications/NotificationSection";
 import { NotificationProps } from "./components/Notifications/Notification.types";
+import { ToastContainer } from "react-toastify";
+import SearchPatient from "./pages/SearchPatient";
 
 const sampleNotifications: NotificationProps[] = [
   {
@@ -59,9 +59,29 @@ const App: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File[]>([]);
   const [fileLists, setFileLists] = useState<File[]>([]);
+  const [mobileNumber, setMobileNumber] = useState<string>("");
+  const [isValid, setIsValid] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onNewScanResult = (decodedText: any) => {
     setQrCodeData(decodedText);
+  };
+
+  const handleMobileNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    const isValidInput = /^\d{10}$/.test(inputValue);
+    setIsValid(isValidInput);
+    setMobileNumber(inputValue);
+  };
+
+  const search = (mobile: string) => {
+    if (mobile === "") {
+      alert("Please enter a mobile number");
+      return;
+    }
+    setLoading(true);
+    // Your search logic here
+    setLoading(false);
   };
 
   return (
@@ -110,6 +130,7 @@ const App: React.FC = () => {
             />
           }
         />
+        <Route path="/search" element={<SearchPatient />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
