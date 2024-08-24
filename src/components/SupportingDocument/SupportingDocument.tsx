@@ -1,17 +1,19 @@
-import { handleFileChange } from "../../utils/attachmentSizeValidation";
-import strings from "../../utils/strings";
-import _ from "lodash";
+// SupportingDocuments.tsx
+import { handleFileChange } from "../../utils/attachmentSizeValidation"; // Utility function for handling file changes
+import strings from "../../utils/strings"; // Utility for strings and localization
+import _ from "lodash"; // Importing lodash (though not used in this file)
 import { useState } from "react";
 
+// Props interface for the SupportingDocuments component
 interface SupportingDocumentsProps {
-  setDocumentType: (value: string) => void;
-  setFileErrorMessage: (message: string) => void;
-  setIsSuccess: (isSuccess: boolean) => void;
-  setSelectedFile: (files: File[]) => void;
-  isSuccess: boolean;
-  FileLists: File[];
-  fileErrorMessage: string;
-  selectedFile: File[];
+  setDocumentType: (value: string) => void; // Function to set the document type
+  setFileErrorMessage: (message: string) => void; // Function to set file error messages
+  setIsSuccess: (isSuccess: boolean) => void; // Function to set success state
+  setSelectedFile: (files: File[]) => void; // Function to set selected files
+  isSuccess: boolean; // Boolean indicating if the operation was successful
+  FileLists: File[]; // List of files (not used in this component)
+  fileErrorMessage: string; // Error message related to file handling
+  selectedFile: File[]; // Array of selected files
 }
 
 const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
@@ -26,30 +28,36 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
 }) => {
   const [documentType, updateDocumentType] = useState("");
 
+  // Handler to delete a file by its name
   const handleDelete = (name: string) => {
+    // Filter out the file with the specified name
     const updatedFilesList = selectedFile.filter((file) => file.name !== name);
-    setSelectedFile(updatedFilesList);
+    setSelectedFile(updatedFilesList); // Update the selected files list
   };
 
+  // Handler for changes in the document type dropdown
   const handleDocumentTypeChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedType = e.target.value;
-    setDocumentType(selectedType);
-    updateDocumentType(selectedType); // Update the state with the selected type
+    setDocumentType(selectedType); // Set the document type in parent component
+    updateDocumentType(selectedType); // Update the local state with the selected type
   };
 
   return (
     <div className="mt-4 rounded-lg border border-stroke bg-white p-2 px-3 shadow-default dark:border-strokedark dark:bg-boxdark">
+      {/* Title of the section */}
       <h2 className="text-1xl mb-4 font-bold text-black dark:text-black sm:text-title-xl2">
         {strings.SUPPORTING_DOCS}
       </h2>
+      {/* Label for document type dropdown */}
       <label className="mb-2.5 block text-left font-medium text-black dark:text-black">
         {strings.DOC_TYPE}
       </label>
       <div className="relative z-20 mb-4 bg-white dark:bg-form-input">
+        {/* Dropdown for selecting document type */}
         <select
-          onChange={handleDocumentTypeChange}
+          onChange={handleDocumentTypeChange} // Handle document type changes
           required
           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-4 px-6 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark"
         >
@@ -58,6 +66,7 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
           <option value="Payment Receipt">Payment Receipt</option>
           <option value="Prescription">Prescription</option>
         </select>
+        {/* Dropdown arrow icon */}
         <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
           <svg
             width="24"
@@ -78,7 +87,7 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
         </span>
       </div>
       <div className="flex items-center justify-evenly gap-x-6">
-        {/* Camera Input for Scanning Documents */}
+        {/* Camera input for scanning documents */}
         <div>
           <label
             htmlFor="cameraInput"
@@ -111,20 +120,20 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
               capture="environment"
               name="cameraInput"
               id="cameraInput"
-              className="sr-only"
+              className="sr-only" // Hide the file input
               onChange={(event: any) => {
                 handleFileChange(
                   event,
                   setFileErrorMessage,
                   setIsSuccess,
                   setSelectedFile
-                );
+                ); // Handle file change for camera input
               }}
             />
           </label>
         </div>
         <div>OR</div>
-        {/* File Input for Selecting Documents */}
+        {/* File input for selecting documents from file system */}
         <div>
           <label
             htmlFor="profile"
@@ -135,24 +144,27 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
           <input
             id="profile"
             type="file"
-            className="hidden"
-            onChange={(e) =>
-              handleFileChange(
-                e,
-                setFileErrorMessage,
-                setIsSuccess,
-                setSelectedFile
-              )
+            className="hidden" // Hide the file input
+            onChange={
+              (e) =>
+                handleFileChange(
+                  e,
+                  setFileErrorMessage,
+                  setIsSuccess,
+                  setSelectedFile
+                ) // Handle file change for file input
             }
             required
           />
         </div>
       </div>
+      {/* Display file error message if present */}
       <div>
         {fileErrorMessage && (
           <p className="bg-red-500 text-black">{fileErrorMessage}</p>
         )}
       </div>
+      {/* Display list of selected files with options to delete */}
       <div>
         {selectedFile.length > 0 && (
           <div className="mt-4">
@@ -172,6 +184,7 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
                     <td className="py-2">{file.name}</td>
                     <td className="py-2">
                       <button onClick={() => handleDelete(file.name)}>
+                        {/* Delete button with an icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"

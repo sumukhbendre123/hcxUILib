@@ -1,34 +1,42 @@
 import React, { ChangeEvent, useState } from "react";
 
+// Define the properties accepted by the PasswordInput component
 interface PasswordInputProps {
-  label: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  label: string; // Label for the password input field
+  value: string; // Value of the password input field
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void; // Function to handle changes in the password input field
 }
 
+// Functional component for rendering a password input field with a show/hide password toggle
 const PasswordInput: React.FC<PasswordInputProps> = ({
   label,
   value,
   onChange,
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false); // State to toggle password visibility
 
   return (
     <div className="mb-4">
+      {/* Label for the password input field */}
       <label className="mb-2.5 block font-medium text-black">{label}</label>
+
+      {/* Container for the password input field */}
       <div className="relative">
+        {/* Password input field */}
         <input
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? "text" : "password"} // Toggle input type based on showPassword state
           value={value}
-          onChange={onChange}
-          placeholder="Enter your password"
+          onChange={onChange} // Event handler for input changes
+          placeholder="Enter your password" // Placeholder text
           className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
         />
+        {/* Toggle button for showing/hiding the password */}
         <span
-          className="absolute right-4 top-4 cursor-pointer"
-          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-4 top-4 cursor-pointer" // Positioning and styling for the toggle button
+          onClick={() => setShowPassword((prev) => !prev)} // Toggle password visibility on click
         >
           {showPassword ? (
+            // SVG icon for showing the password
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -49,6 +57,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
               />
             </svg>
           ) : (
+            // SVG icon for hiding the password
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

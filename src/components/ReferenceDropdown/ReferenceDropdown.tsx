@@ -1,38 +1,45 @@
+// ReferenceDropdown.tsx
 import React from "react";
 
+// Interface defining the structure of each dropdown option
 interface DropdownOption {
-  label: string;
-  value: string;
+  label: string; // The display label for the option
+  value: string; // The URL or value associated with the option
 }
 
+// Props interface for the ReferenceDropdown component
 interface ReferenceDropdownProps {
-  options: DropdownOption[];
-  onNavigate: (url: string) => void;
+  options: DropdownOption[]; // Array of dropdown options
+  onNavigate: (url: string) => void; // Callback function to handle navigation
 }
 
 const ReferenceDropdown: React.FC<ReferenceDropdownProps> = ({
   options,
   onNavigate,
 }) => {
+  // Handler for the change event of the select element
   const handleNavigation = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const url = event.target.value;
     if (url) {
-      onNavigate(url);
+      onNavigate(url); // Invoke the callback function with the selected URL
     }
   };
 
   return (
     <div className="absolute right-0 top-0 p-3 z-20 inline-block rounded bg-white dark:bg-boxdark">
+      {/* Dropdown select element */}
       <select
-        onChange={handleNavigation}
+        onChange={handleNavigation} // Event handler for change events
         className="z-20 inline-flex appearance-none rounded border border-stroke bg-transparent py-2 pl-4 pr-9 text-sm font-medium outline-none dark:border-strokedark"
       >
+        {/* Render dropdown options */}
         {options.map((opt, index) => (
           <option key={index} value={opt.value}>
             {opt.label}
           </option>
         ))}
       </select>
+      {/* Dropdown arrow icon */}
       <span className="absolute right-5 top-1/2 z-10 -translate-y-1/2">
         <svg
           width="18"

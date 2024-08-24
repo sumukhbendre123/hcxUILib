@@ -1,12 +1,14 @@
 import React, { ChangeEvent } from "react";
 
+// Define the properties accepted by the AuthInput component
 interface AuthInputProps {
-  label: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string; // Add the placeholder prop here
+  label: string; // Label for the input field
+  value: string; // Value of the input field
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void; // Function to handle changes in input field
+  placeholder?: string; // Optional placeholder text for the input field
 }
 
+// Functional component for rendering an input field with a label
 const AuthInput: React.FC<AuthInputProps> = ({
   label,
   value,
@@ -15,15 +17,20 @@ const AuthInput: React.FC<AuthInputProps> = ({
 }) => {
   return (
     <div className="mb-4">
+      {/* Label for the input field */}
       <label className="mb-2.5 block font-medium text-black">{label}</label>
+
+      {/* Container for the input field */}
       <div className="relative">
+        {/* Input field */}
         <input
           type="text"
           value={value}
-          onChange={onChange}
-          placeholder={placeholder} // Use the placeholder prop here
+          onChange={onChange} // Event handler for input changes
+          placeholder={placeholder} // Placeholder text (if provided)
           className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
         />
+        {/* Optional icon (SVG) to the right of the input field */}
         <span className="absolute right-4 top-4">
           <svg
             className="fill-current"
