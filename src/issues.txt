@@ -1,0 +1,8 @@
+Isues to fix
+1] supporting document fix the camera feature 
+2] basic Ui component fix the input text 
+
+
+to do 
+1] update the documentation file for basic Ui component
+3] make the Api core component of keycloack, registry and outgoing generating Api

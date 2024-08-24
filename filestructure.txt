@@ -20,6 +20,10 @@
             |-- PasswordInput.tsx
         |-- BackButton
             |-- BackButton.tsx
+        |-- BasicUIComponent
+            |-- MultiSelectDropdown.tsx
+            |-- SelectInput.tsx
+            |-- TextInputWithLabel.tsx
         |-- CursorConnect
             |-- CursorConnect.tsx
         |-- CustomButton.tsx
@@ -41,6 +45,7 @@
         |-- SupportingDocument
             |-- SupportingDocument.tsx
         |-- TransparentLoader.tsx
+    |-- documentation.txt
     |-- images
         |-- banner.svg
         |-- googleQRcodes.png
@@ -52,6 +57,7 @@
         |-- swasth_logo.png
         |-- Verified-512.png
     |-- index.css
+    |-- issues.txt
     |-- jest.config.js
     |-- lodash.d.ts
     |-- main.tsx
@@ -61,6 +67,7 @@
         |-- OTP.tsx
         |-- ParticipantCode.tsx
         |-- SearchPatient.tsx
+        |-- ShowcasePage.tsx
         |-- Signup.tsx
         |-- SomePage.tsx
         |-- VerifyOTP.tsx
