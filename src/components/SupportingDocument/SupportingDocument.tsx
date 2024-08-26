@@ -1,19 +1,18 @@
-// SupportingDocuments.tsx
+import React, { useState, useRef } from "react";
+import Webcam from "react-webcam";
 import { handleFileChange } from "../../utils/attachmentSizeValidation"; // Utility function for handling file changes
 import strings from "../../utils/strings"; // Utility for strings and localization
-import _ from "lodash"; // Importing lodash (though not used in this file)
-import { useState } from "react";
 
 // Props interface for the SupportingDocuments component
 interface SupportingDocumentsProps {
-  setDocumentType: (value: string) => void; // Function to set the document type
-  setFileErrorMessage: (message: string) => void; // Function to set file error messages
-  setIsSuccess: (isSuccess: boolean) => void; // Function to set success state
-  setSelectedFile: (files: File[]) => void; // Function to set selected files
-  isSuccess: boolean; // Boolean indicating if the operation was successful
-  FileLists: File[]; // List of files (not used in this component)
-  fileErrorMessage: string; // Error message related to file handling
-  selectedFile: File[]; // Array of selected files
+  setDocumentType: (value: string) => void;
+  setFileErrorMessage: (message: string) => void;
+  setIsSuccess: (isSuccess: boolean) => void;
+  setSelectedFile: (files: File[]) => void;
+  isSuccess: boolean;
+  FileLists: File[];
+  fileErrorMessage: string;
+  selectedFile: File[];
 }
 
 const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
@@ -27,12 +26,13 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
   selectedFile,
 }) => {
   const [documentType, updateDocumentType] = useState("");
+  const [isCameraOpen, setIsCameraOpen] = useState(false); // State to control webcam
+  const webcamRef = useRef<Webcam>(null); // Webcam reference
 
   // Handler to delete a file by its name
   const handleDelete = (name: string) => {
-    // Filter out the file with the specified name
     const updatedFilesList = selectedFile.filter((file) => file.name !== name);
-    setSelectedFile(updatedFilesList); // Update the selected files list
+    setSelectedFile(updatedFilesList);
   };
 
   // Handler for changes in the document type dropdown
@@ -40,8 +40,34 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedType = e.target.value;
-    setDocumentType(selectedType); // Set the document type in parent component
-    updateDocumentType(selectedType); // Update the local state with the selected type
+    setDocumentType(selectedType);
+    updateDocumentType(selectedType);
+  };
+
+  // Capture photo from webcam and upload it
+  const captureAndUpload = () => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) {
+        const file = dataURLtoFile(imageSrc, `photo-${Date.now()}.jpg`);
+        setSelectedFile([...selectedFile, file]);
+        setIsCameraOpen(false); // Close the webcam after capturing
+        setIsSuccess(true); // Indicate success
+      }
+    }
+  };
+
+  // Convert dataURL to File object
+  const dataURLtoFile = (dataUrl: string, filename: string) => {
+    const arr = dataUrl.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   };
 
   return (
@@ -51,7 +77,7 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
         {strings.SUPPORTING_DOCS}
       </h2>
       {/* Label for document type dropdown */}
-      <label className="mb-2.5 block text-left font-medium text-black dark:text-black">
+      <label className="mb-2.5 block text-left font-medium text-white dark:text-black">
         {strings.DOC_TYPE}
       </label>
       <div className="relative z-20 mb-4 bg-white dark:bg-form-input">
@@ -87,50 +113,14 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
         </span>
       </div>
       <div className="flex items-center justify-evenly gap-x-6">
-        {/* Camera input for scanning documents */}
+        {/* Button to open the webcam */}
         <div>
-          <label
-            htmlFor="cameraInput"
-            className="bottom-0 right-0 flex h-15 w-15 cursor-pointer items-center justify-center rounded-full bg-primary text-black hover:bg-opacity-90 sm:bottom-2 sm:right-2"
+          <button
+            onClick={() => setIsCameraOpen(!isCameraOpen)}
+            className="rounded bg-primary px-4 py-2 text-black hover:bg-primary-dark"
           >
-            <svg
-              className="fill-current"
-              width="20"
-              height="20"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M4.76464 1.42638C4.87283 1.2641 5.05496 1.16663 5.25 1.16663H8.75C8.94504 1.16663 9.12717 1.2641 9.23536 1.42638L10.2289 2.91663H12.25C12.7141 2.91663 13.1592 3.101 13.4874 3.42919C13.8156 3.75738 14 4.2025 14 4.66663V11.0833C14 11.5474 13.8156 11.9925 13.4874 12.3207C13.1592 12.6489 12.7141 12.8333 12.25 12.8333H1.75C1.28587 12.8333 0.840752 12.6489 0.512563 12.3207C0.184375 11.9925 0 11.5474 0 11.0833V4.66663C0 4.2025 0.184374 3.75738 0.512563 3.42919C0.840752 3.101 1.28587 2.91663 1.75 2.91663H3.77114L4.76464 1.42638ZM5.56219 2.33329L4.5687 3.82353C4.46051 3.98582 4.27837 4.08329 4.08333 4.08329H1.75C1.59529 4.08329 1.44692 4.14475 1.33752 4.25415C1.22812 4.36354 1.16667 4.51192 1.16667 4.66663V11.0833C1.16667 11.238 1.22812 11.3864 1.33752 11.4958C1.44692 11.6052 1.59529 11.6666 1.75 11.6666H12.25C12.4047 11.6666 12.5531 11.6052 12.6625 11.4958C12.7719 11.3864 12.8333 11.238 12.8333 11.0833V4.66663C12.8333 4.51192 12.7719 4.36354 12.6625 4.25415C12.5531 4.14475 12.4047 4.08329 12.25 4.08329H9.91667C9.72163 4.08329 9.53949 3.98582 9.4313 3.82353L8.43781 2.33329H5.56219Z"
-                fill=""
-              />
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.00004 5.83329C6.03354 5.83329 5.25004 6.61679 5.25004 7.58329C5.25004 8.54979 6.03354 9.33329 7.00004 9.33329C7.96654 9.33329 8.75004 8.54979 8.75004 7.58329C8.75004 6.61679 7.96654 5.83329 7.00004 5.83329ZM4.08337 7.58329C4.08337 5.97246 5.38921 4.66663 7.00004 4.66663C8.61087 4.66663 9.91671 5.97246 9.91671 7.58329C9.91671 9.19412 8.61087 10.5 7.00004 10.5C5.38921 10.5 4.08337 9.19412 4.08337 7.58329Z"
-                fill=""
-              />
-            </svg>
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              name="cameraInput"
-              id="cameraInput"
-              className="sr-only" // Hide the file input
-              onChange={(event: any) => {
-                handleFileChange(
-                  event,
-                  setFileErrorMessage,
-                  setIsSuccess,
-                  setSelectedFile
-                ); // Handle file change for camera input
-              }}
-            />
-          </label>
+            {isCameraOpen ? "Close Camera" : "Scan Document"}
+          </button>
         </div>
         <div>OR</div>
         {/* File input for selecting documents from file system */}
@@ -145,19 +135,37 @@ const SupportingDocuments: React.FC<SupportingDocumentsProps> = ({
             id="profile"
             type="file"
             className="hidden" // Hide the file input
-            onChange={
-              (e) =>
-                handleFileChange(
-                  e,
-                  setFileErrorMessage,
-                  setIsSuccess,
-                  setSelectedFile
-                ) // Handle file change for file input
+            onChange={(e) =>
+              handleFileChange(
+                e,
+                setFileErrorMessage,
+                setIsSuccess,
+                setSelectedFile
+              )
             }
             required
           />
         </div>
       </div>
+
+      {/* Show the camera and capture button when the camera is open */}
+      {isCameraOpen && (
+        <div className="mt-4">
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            className="mb-4"
+          />
+          <button
+            onClick={captureAndUpload}
+            className="mt-2 rounded bg-primary px-4 py-2 text-black hover:bg-primary-dark"
+          >
+            Capture and Upload
+          </button>
+        </div>
+      )}
+
       {/* Display file error message if present */}
       <div>
         {fileErrorMessage && (

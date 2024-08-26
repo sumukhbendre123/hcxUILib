@@ -1,5 +1,5 @@
 Isues to fix
-1] supporting document fix the camera feature 
+
 2] basic Ui component fix the input text 
 
 
