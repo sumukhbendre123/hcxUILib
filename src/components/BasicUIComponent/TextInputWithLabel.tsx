@@ -1,35 +1,27 @@
 import React from "react";
 
+// Define the props for the TextInputWithLabel component
 interface TextInputWithLabelProps {
-  label: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  type?: string;
+  label: string; // Label text for the input field
+  value: string; // Value of the input field
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // Handler for input changes
 }
 
+// Functional component for text input with a label
 const TextInputWithLabel: React.FC<TextInputWithLabelProps> = ({
   label,
   value,
   onChange,
-  placeholder = "",
-  disabled = false,
-  type = "text",
 }) => {
   return (
-    <div className="mt-3 text-base font-bold text-black dark:text-white">
-      <label className="block">{label}</label>
-      <div className="mt-2">
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          disabled={disabled}
-          className="w-full rounded-lg border-[1.5px] border-stroke bg-white py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-        />
-      </div>
+    <div>
+      <label>{label}</label>
+      <input
+        type="text"
+        value={value}
+        onChange={onChange}
+        style={{ border: "1px solid black", padding: "5px", width: "100%" }}
+      />
     </div>
   );
 };

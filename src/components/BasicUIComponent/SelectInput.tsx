@@ -1,24 +1,29 @@
 import React from "react";
 
+// Define the Option type for select input options
 interface Option {
   value: string;
   label: string;
 }
 
+// Define the props for the SelectInput component
 interface SelectInputProps {
-  label: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: Option[];
-  disabled?: boolean;
+  label: string; // Label text for the select input
+  value: string | null; // Current value of the select input, can be null for no selection
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // Handler for select input changes
+  options: Option[]; // Options for the select input
+  disabled?: boolean; // Optional prop to disable the select input
+  placeholder?: string; // Optional placeholder text for the select input
 }
 
+// Functional component for select input with a label
 const SelectInput: React.FC<SelectInputProps> = ({
   label,
   value,
   onChange,
   options,
   disabled = false,
+  placeholder = "Select an option", // Default placeholder text
 }) => {
   return (
     <div>
@@ -28,10 +33,13 @@ const SelectInput: React.FC<SelectInputProps> = ({
       <div className="relative z-20 bg-white dark:bg-form-input">
         <select
           onChange={onChange}
-          value={value}
+          value={value ?? ""} // Default to empty string if value is null
           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-6 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark"
           disabled={disabled}
         >
+          <option value="" disabled>
+            {placeholder} {/* Use placeholder prop */}
+          </option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

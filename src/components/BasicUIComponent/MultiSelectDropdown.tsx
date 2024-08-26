@@ -2,27 +2,32 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import _ from "lodash";
 
+// Define the props for the MultiSelectDropdown component
 interface MultiSelectDropdownProps {
-  options: string[];
-  onSelect: (selected: string[]) => void;
+  options: string[]; // List of options for the dropdown
+  onSelect: (selected: string[]) => void; // Handler for selected options
 }
 
+// Functional component for a multi-select dropdown
 const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   options,
   onSelect,
 }) => {
-  const [selected, setSelected] = useState([options[0]]);
+  const [selected, setSelected] = useState([options[0]]); // Initialize selected options with the first option
 
+  // Handle dropdown selection
   const onDropDownSelect = (value: string) => {
-    const newSelected = _.uniq([...selected, value]);
+    const newSelected = _.uniq([...selected, value]); // Ensure no duplicate selections
     setSelected(newSelected);
     onSelect(newSelected);
   };
 
+  // Handle removal of selected option
   const removeSelected = (value: string) => {
     if (selected.length === 1) {
+      // Show error if only one option is selected
       toast.error("At least one option needs to be selected", {
-        position: "top-right", // Corrected position here
+        position: "top-right",
       });
       return;
     }

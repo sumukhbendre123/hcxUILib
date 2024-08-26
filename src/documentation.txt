@@ -279,6 +279,30 @@ Implementation Details
         Manages document selection, upload, and display.
         Handles file validation and error messaging.
 
+10. BasicUIComponent
+
+Path: components/BasicUIComponent/BasicUIComponent.tsx
+
+Use Case
+
+The BasicUIComponent provides a simple, reusable UI element that can be easily customized and extended for various use cases in your application. It serves as a foundational component for building other UI elements by offering essential styling and structure.
+
+Implementation Details
+
+    Features:
+        Basic styling and structure for UI elements.
+        Customizable through props for different use cases.
+
+    Props:
+        className?: string - Optional additional CSS classes for custom styling.
+        onClick?: () => void - Optional callback for handling click events.
+        disabled?: boolean - Optional prop to disable the component's interaction.
+        label?: string - Optional label text for the component.
+
+    Key Functions:
+        Provides a base structure for UI elements with default styling.
+        Allows customization through additional CSS classes and optional props.
+
 Conclusion
 
 This documentation provides an overview of each core component in the HCX UI Core Component Library, along with detailed descriptions of the props required for each component. These props ensure that users can properly configure and customize each component according to their needs.
