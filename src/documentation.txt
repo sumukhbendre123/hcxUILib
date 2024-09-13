@@ -303,6 +303,106 @@ Implementation Details
         Provides a base structure for UI elements with default styling.
         Allows customization through additional CSS classes and optional props.
 
+11. API Client Component
+
+path: components/ApiClient/ApiClient.ts
+
+Purpose: Provides methods for generating authentication tokens with Keycloak and performing data operations with the Registry API.
+Key Functions
+
+    Keycloak API Client
+        Functionality: Handles authentication with Keycloak to generate access tokens.
+        Usage:
+            generateToken:
+                Description: Requests an access token from Keycloak using user credentials.
+                Parameters:
+                    username: string | undefined - User’s username.
+                    password: string | undefined - User’s password.
+                Returns: Promise<string> - The access token.
+                Implementation:
+                    Constructs a URL-encoded request body and appropriate headers.
+                    Sends a POST request to Keycloak’s token endpoint.
+                    Returns the access token if successful, or throws an error if not.
+
+    Registry API Client
+        Functionality: Interacts with the Registry API to perform data operations such as retrieving participant details.
+        Usage:
+            getParticipantByCode:
+                Description: Searches for participant details using a participant code.
+                Parameters:
+                    code: any - The participant code to search for.
+                Returns: Promise<any> - Participant details.
+                Implementation:
+                    Constructs a request payload with the search criteria.
+                    Sends a POST request to the Registry API, including the Bearer token in the headers for authorization.
+                    Returns the search results if successful, or throws an error if not.
+
+    Combined API Client
+        Functionality: Creates an integrated client for both Keycloak and Registry APIs.
+        Usage:
+            createApiClient:
+                Description: Initializes and returns a client object with methods for interacting with both Keycloak and Registry APIs.
+                Parameters:
+                    keycloakBaseUrl: string - Base URL for Keycloak API.
+                    registryBaseUrl: string - Base URL for Registry API.
+                Returns: An object containing methods for both Keycloak and Registry API interactions.
+                Implementation:
+                    Instantiates the Keycloak client for token generation.
+                    Provides a method to create a Registry API client with a provided token, merging it with the Keycloak client methods.
+
+Implementation Details
+
+    Keycloak Token Generation:
+        Headers:
+            Content-Type: application/x-www-form-urlencoded - Indicates the content type of the request body.
+        Body:
+            Includes client_id, username, password, and grant_type parameters for authentication.
+
+    Registry API Interaction:
+        Payload:
+            Contains the search criteria for participant data.
+        Headers:
+            Authorization: Bearer ${token} - Authenticates the request using the provided token.
+
+12. GenerateOutgoingRequest Component
+
+path: components/GenerateOutgoingRequest/GenerateOutgoingRequest.tsx
+
+Purpose: Manages API requests and displays a button for initiating the request. Handles loading states and error notifications.
+Props
+
+    url (string): The endpoint URL for the API request. This is appended to the base URL defined in the environment variable.
+    payload (object): The data to be sent with the POST request.
+    onSuccess ((data: any) => void, optional): Callback function to handle successful responses.
+    onError ((error: any) => void, optional): Callback function to handle errors.
+
+Key Functions
+
+    handleRequest
+        Description: Handles the API request process.
+        Implementation:
+            Sets the loading state to true when the request starts.
+            Sends a POST request to the specified endpoint using axios.
+            Sets the loading state to false after receiving a response or encountering an error.
+            Calls the onSuccess callback if the response status is 200 and provides the response data.
+            Calls the onError callback and displays an error toast message if an error occurs.
+
+    Button
+        Description: A button that initiates the API request when clicked.
+        Behavior:
+            Displays "Processing..." when the request is in progress (i.e., when loading is true).
+            Displays "Submit Request" when not loading.
+            Disables the button while the request is in progress.
+
+Implementation Details
+
+    Environment Variable:
+        Uses process.env.hcx_mock_service as the base URL for the API request.
+    Loading State:
+        Managed using React's useState hook to show or hide loading indicators.
+    Error Handling:
+        Errors are logged to the console and an error toast message is displayed using react-toastify.
+
 Conclusion
 
 This documentation provides an overview of each core component in the HCX UI Core Component Library, along with detailed descriptions of the props required for each component. These props ensure that users can properly configure and customize each component according to their needs.

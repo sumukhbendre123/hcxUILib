@@ -11,6 +11,8 @@ import { NotificationProps } from "./components/Notifications/Notification.types
 import { ToastContainer } from "react-toastify";
 import SearchPatient from "./pages/SearchPatient";
 import ShowcasePage from "./pages/ShowcasePage";
+import SampleRequestPage from "./pages/SampleRequestPage";
+import SamplePage from "./pages/SamplePage";
 
 // Sample notifications to be used in the NotificationSection component
 const sampleNotifications: NotificationProps[] = [
@@ -114,6 +116,10 @@ const App: React.FC = () => {
         />
         <Route path="/noti" element={<NotificationSectionWrapper />} />{" "}
         {/* Notifications page route */}
+        <Route path="/sr" element={<SampleRequestPage />} />
+        {/* SampleRequestPage route */}
+        <Route path="/sample" element={<SamplePage />} />
+        {/* SamplePage route */}
         <Route
           path="/cc"
           element={
